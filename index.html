@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Darpan - Smart Attendance</title>
+    <link rel="stylesheet" href="index.css" />
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-cover bg-center font-sans" style="background-image: url('assets/pencils.png');">
+
+    <!-- Navbar -->
+    <nav class="absolute top-0 left-0 w-full z-50 bg-transparent">
+        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+            <a href="#" onclick="showSection('home')" class="flex items-center space-x-3">
+                <span class="text-2xl font-semibold text-white">Darpan</span>
+            </a>
+            <div>
+                <ul class="flex space-x-4 text-white">
+                    <li><a href="#" onclick="showSection('home')" class="hover:text-blue-400">Home</a></li>
+                    <li><a href="#" onclick="showSection('attendance')" class="hover:text-blue-400">Attendance</a></li>
+                    <li><a href="#" onclick="showSection('edualert')" class="hover:text-blue-400">EduAlert</a></li>
+                    <li><a href="#" onclick="showSection('help')" class="hover:text-blue-400">Help</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sections -->
+    <div id="home" class="min-h-screen flex flex-col items-center justify-center text-center text-white px-6 py-20">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-6 transition-transform transform hover:scale-105 hover:shadow-lg duration-300 fonttt">
+            Darpan: Ab Hajiri Hogi Smart
+        </h1>
+        <button onclick="showSection('attendance')" class="mt-5 bg-blue-700 hover:bg-white hover:text-blue-700 text-white px-5 py-2.5 rounded-2xl transition-colors">
+            Get Started
+        </button>
+    </div>
+
+    <div id="attendance" class="hidden min-h-screen flex items-center justify-center px-6 py-16">
+        <div class="relative z-10 flex flex-col items-center py-16 px-6">
+            <h2 class="text-3xl font-bold mb-6 text-white drop-shadow-lg">Mark Attendance</h2>
+            <div class="w-[600px] h-[400px] bg-gray-200 flex items-center justify-center rounded-lg shadow-md mb-6">
+                <p class="text-gray-600">[Camera Input Placeholder]</p>
+            </div>
+            <div class="w-[600px] bg-white shadow-md rounded-lg p-4 mb-6">
+                <h3 class="font-semibold mb-2">Recognition Logs</h3>
+                <ul id="attendance-logs" class="space-y-2"></ul>
+            </div>
+            <button onclick="downloadAttendance()" class="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">
+                Download CSV
+            </button>
+        </div>
+    </div>
+
+    <div id="edualert" class="hidden min-h-screen flex items-center justify-center px-6 py-12">
+        <div class="relative z-10 flex flex-col items-center w-full max-w-xl bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800 text-center">DARPAN - Class Attendance & Dropout</h2>
+            <div class="w-full mb-5">
+                <label for="classSelect" class="block text-base text-gray-700 mb-2">Class (1-12)</label>
+                <select id="classSelect" class="w-full p-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">Select a class</option>
+                </select>
+            </div>
+            <button class="w-full px-3 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 text-base font-semibold">
+                Show Students
+            </button>
+        </div>
+    </div>
+
+    <div id="help" class="hidden min-h-screen flex items-center justify-center text-white px-6 py-20">
+        <h2 class="text-3xl font-bold">Help Section Coming Soon!</h2>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-6 mt-10">
+        <div class="max-w-screen-xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center border-t border-gray-700 pt-6">
+            <div class="mb-6 md:mb-0 text-center md:text-left">
+                <h2 class="font-semibold mb-3">FOLLOW US</h2>
+                <div class="flex justify-center md:justify-start gap-4 text-xl">
+                    <a href="#" class="hover:text-gray-400">F</a>
+                    <a href="#" class="hover:text-gray-400">I</a>
+                    <a href="#" class="hover:text-gray-400">T</a>
+                    <a href="#" class="hover:text-gray-400">L</a>
+                </div>
+                <p class="text-gray-400 text-sm mt-3">© 2025-26 Smart India Hackathon. All rights reserved</p>
+            </div>
+            <div class="text-center md:text-right">
+                <h2 class="font-semibold mb-3">CONTACT US</h2>
+                <p class="text-gray-300">+91 11 29581241, +91 11 29581240</p>
+                <p class="text-gray-300 mt-1"><a href="mailto:sih@aicte-india.org" class="hover:underline">sih@aicte-india.org</a></p>
+                <p class="text-gray-300 mt-1"><a href="mailto:hackathon@aicte-india.org" class="hover:underline">hackathon@aicte-india.org</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initial data
+        const logs = [
+            { name: "Rahul Sharma", status: "Known" },
+            { name: "Unknown #1", status: "Unknown" },
+        ];
+
+        // Populate Attendance Logs
+        function populateLogs() {
+            const ul = document.getElementById("attendance-logs");
+            ul.innerHTML = "";
+            logs.forEach((log, index) => {
+                const li = document.createElement("li");
+                li.className = "flex justify-between border-b pb-1";
+                li.innerHTML = `<span>${log.name}</span><span class="${log.status === 'Known' ? 'text-green-600' : 'text-red-600'}">${log.status}</span>`;
+                ul.appendChild(li);
+            });
+        }
+
+        function downloadAttendance() {
+            const csvContent = [
+                ["Name", "Status"],
+                ...logs.map((l) => [l.name, l.status]),
+            ]
+            .map((e) => e.join(","))
+            .join("\n");
+
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "attendance.csv");
+            link.click();
+        }
+
+        function showSection(sectionId) {
+            ["home", "attendance", "edualert", "help"].forEach(id => {
+                document.getElementById(id).classList.add("hidden");
+            });
+            document.getElementById(sectionId).classList.remove("hidden");
+            if(sectionId === "attendance") populateLogs();
+        }
+
+        // Populate class select dropdown
+        const classSelect = document.getElementById("classSelect");
+        for(let i=1; i<=12; i++){
+            const option = document.createElement("option");
+            option.value = i;
+            option.textContent = i;
+            classSelect.appendChild(option);
+        }
+
+        // Initially show home
+        showSection("home");
+    </script>
+
+</body>
+</html>

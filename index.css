@@ -1,0 +1,13 @@
+@import "https://fonts.googleapis.com/css2?family=Rubik+Dirt&display=swap";
+
+body {
+    background-attachment: fixed;
+}
+
+.fonttt {
+    font-family: "Rubik Dirt", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    color: white;
+    font-size: 50px;
+}
